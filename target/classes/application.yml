@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: reliable-orders
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-group
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.example.reliableorders.model
+        spring.json.value.default.type: com.example.reliableorders.model.OrderEvent
+        spring.json.use.type.headers: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      ack-mode: record
+
+  datasource:
+    url: jdbc:h2:mem:ordersdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.example.reliableorders: INFO
